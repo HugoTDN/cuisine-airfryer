@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import Callout from '../../components/mdx/Callout.astro';
+import FAQ from '../../components/mdx/FAQ.astro';
+import ProsCons from '../../components/mdx/ProsCons.astro';
+import ProductCard from '../../components/mdx/ProductCard.astro';
+import RecipeMeta from '../../components/mdx/RecipeMeta.astro';
+import InfoBox from '../../components/mdx/InfoBox.astro';
+import ExternalLink from '../../components/mdx/ExternalLink.astro';
+import LinkInterne from '../../components/mdx/LinkInterne.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('recettes', ({ data }) => data.published);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const recipeLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Recipe',
+  name: entry.data.title,
+  description: entry.data.excerpt,
+  prepTime: `PT${entry.data.prepTime}`,
+  cookTime: `PT${entry.data.cookTime}`,
+  totalTime: `PT${entry.data.totalTime}`,
+  recipeYield: `${entry.data.servings} portions`,
+  recipeIngredient: entry.data.ingredients,
+  ...(entry.data.calories && { nutrition: { '@type': 'NutritionInformation', calories: `${entry.data.calories} calories` } }),
+  ...(entry.data.featuredImage && { image: entry.data.featuredImage }),
+  author: { '@type': 'Organization', name: entry.data.author },
+};
+---
+
+<BlogLayout
+  title={entry.data.title}
+  description={entry.data.excerpt}
+  publishedAt={entry.data.publishedAt}
+  updatedAt={entry.data.updatedAt}
+  author={entry.data.author}
+  featuredImage={entry.data.featuredImage}
+  featuredImageAlt={entry.data.featuredImageAlt}
+  seo={entry.data.seo}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(recipeLd)} />
+  <Content components={{ Callout, FAQ, ProsCons, ProductCard, RecipeMeta, InfoBox, ExternalLink, LinkInterne }} />
+</BlogLayout>

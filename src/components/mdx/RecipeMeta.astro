@@ -1,0 +1,52 @@
+---
+interface Props {
+  prepTime: string;
+  cookTime: string;
+  totalTime: string;
+  servings: number;
+  calories?: number;
+  difficulty: 'facile' | 'moyen' | 'difficile';
+  appareil: string;
+}
+
+const { prepTime, cookTime, totalTime, servings, calories, difficulty, appareil } = Astro.props;
+
+const difficultyColors = {
+  facile: 'bg-green-100 text-green-800',
+  moyen: 'bg-amber-100 text-amber-800',
+  difficile: 'bg-red-100 text-red-800',
+};
+---
+
+<div class="my-6 grid grid-cols-2 gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 sm:grid-cols-4">
+  <div>
+    <p class="text-xs text-gray-500 uppercase">Préparation</p>
+    <p class="font-semibold">{prepTime}</p>
+  </div>
+  <div>
+    <p class="text-xs text-gray-500 uppercase">Cuisson</p>
+    <p class="font-semibold">{cookTime}</p>
+  </div>
+  <div>
+    <p class="text-xs text-gray-500 uppercase">Total</p>
+    <p class="font-semibold">{totalTime}</p>
+  </div>
+  <div>
+    <p class="text-xs text-gray-500 uppercase">Portions</p>
+    <p class="font-semibold">{servings} pers.</p>
+  </div>
+  <div>
+    <p class="text-xs text-gray-500 uppercase">Appareil</p>
+    <p class="font-semibold">{appareil}</p>
+  </div>
+  <div>
+    <p class="text-xs text-gray-500 uppercase">Difficulté</p>
+    <span class={`inline-block rounded px-2 py-0.5 text-xs font-medium ${difficultyColors[difficulty]}`}>{difficulty}</span>
+  </div>
+  {calories && (
+    <div>
+      <p class="text-xs text-gray-500 uppercase">Calories</p>
+      <p class="font-semibold">{calories} kcal</p>
+    </div>
+  )}
+</div>

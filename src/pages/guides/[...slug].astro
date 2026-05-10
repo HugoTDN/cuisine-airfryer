@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import Callout from '../../components/mdx/Callout.astro';
+import FAQ from '../../components/mdx/FAQ.astro';
+import ProsCons from '../../components/mdx/ProsCons.astro';
+import ProductCard from '../../components/mdx/ProductCard.astro';
+import InfoBox from '../../components/mdx/InfoBox.astro';
+import ExternalLink from '../../components/mdx/ExternalLink.astro';
+import LinkInterne from '../../components/mdx/LinkInterne.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('guides', ({ data }) => data.published);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<BlogLayout
+  title={entry.data.title}
+  description={entry.data.excerpt}
+  publishedAt={entry.data.publishedAt}
+  updatedAt={entry.data.updatedAt}
+  author={entry.data.author}
+  seo={entry.data.seo}
+>
+  <Content components={{ Callout, FAQ, ProsCons, ProductCard, InfoBox, ExternalLink, LinkInterne }} />
+</BlogLayout>
