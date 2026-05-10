@@ -1,0 +1,18 @@
+---
+import { withUtm } from '../../lib/utm';
+
+interface Props {
+  href: string;
+  campaign: 'recette' | 'comparatif' | 'guide' | 'test' | 'homepage' | 'accessoire' | 'actualite';
+  affiliate?: boolean;
+  target?: string;
+}
+
+const { href, campaign, affiliate = false, target = '_blank' } = Astro.props;
+const finalHref = withUtm(href, campaign);
+const rel = affiliate ? 'sponsored nofollow noopener' : 'noopener';
+---
+
+<a href={finalHref} target={target} rel={rel}>
+  <slot />
+</a>

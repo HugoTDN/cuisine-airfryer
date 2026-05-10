@@ -1,0 +1,29 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  publishedAt?: Date;
+  author?: string;
+}
+
+const { title, description, publishedAt, author } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="mx-auto max-w-3xl px-4 py-12">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{title}</h1>
+      {publishedAt && (
+        <time class="mt-2 block text-sm text-gray-500" datetime={publishedAt.toISOString()}>
+          {publishedAt.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+      )}
+      {author && <p class="mt-1 text-sm text-gray-500">Par {author}</p>}
+    </header>
+    <div class="prose prose-lg max-w-none">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
