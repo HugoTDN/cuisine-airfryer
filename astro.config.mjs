@@ -6,8 +6,11 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkGfm from 'remark-gfm';
 
+const isGitHubPages = !!process.env.GITHUB_PAGES;
+
 export default defineConfig({
-  site: 'https://cuisine-airfryer.fr',
+  site: isGitHubPages ? 'https://hugotdn.github.io' : 'https://cuisine-airfryer.fr',
+  base: isGitHubPages ? '/cuisine-airfryer' : '/',
   integrations: [mdx(), sitemap(), robotsTxt()],
   markdown: {
     remarkPlugins: [remarkGfm],
